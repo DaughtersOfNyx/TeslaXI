@@ -44,12 +44,16 @@ namespace TheLeftExit.TeslaX
                 if (info.Tile.IsEmpty)
                 {
                     log("Finished: no blocks in range");
+                    if (1158 < netAvatar.Position.X && netAvatar.Position.X < 1245)
+                        window.SendKey(JumpKey, true);
                     break;
                 }
                 Int32 distance = PunchingDistance(netAvatar.Position.X, info.X, netAvatar.FacingLeft);
                 if(distance > Range)
                 {
                     log("Finished: no blocks in range");
+                    if (1158 < netAvatar.Position.X && netAvatar.Position.X < 1245)
+                        window.SendKey(JumpKey, true);
                     break;
                 }
                 if (!condition(info.Tile))
@@ -60,7 +64,9 @@ namespace TheLeftExit.TeslaX
 
                 bool? toMove = movementManager.Update(distance > TargetDistance);
                 if (toMove.HasValue)
+                {
                     window.SendKey(netAvatar.FacingLeft ? LeftKey : RightKey, toMove.Value);
+                }
                 bool? toPunch = punchManager.Update();
                 if (toPunch.HasValue)
                     window.SendKey(PunchKey, toPunch.Value);
@@ -69,6 +75,13 @@ namespace TheLeftExit.TeslaX
             window.SendKey(LeftKey, false);
             window.SendKey(RightKey, false);
             window.SendKey(PunchKey, false);
+        }
+        public void posit()
+        {
+            NetAvatar netAvatar = game.App.GameLogicComponent.NetAvatar;
+            Thread.Sleep(2000);
+            Console.Clear();
+            Console.WriteLine("Current position is: " + netAvatar.Position.X + " , " + netAvatar.Position.Y);
         }
     }
 }
