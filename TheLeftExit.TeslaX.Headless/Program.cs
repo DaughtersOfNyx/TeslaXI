@@ -38,7 +38,7 @@ namespace TheLeftExit.TeslaX.Headless
             {
                 while (true)
                 {
-                    //bot.posit();
+                    //bot.posit(); //FOR DEBUGGING
                     if (VK.Control.IsKeyDown() && VK.X.IsKeyDown()) //Registers ctrl + x for autobreak
                         break;
                     if(VK.Control.IsKeyDown() && VK.C.IsKeyDown())

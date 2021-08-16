@@ -50,41 +50,14 @@ namespace TheLeftExit.TeslaX
                 if (info.Tile.IsEmpty)
                 {
                     log("Finished: no blocks in range");
-                    if (1250 < netAvatar.Position.X && netAvatar.Position.X < 1400)
-                    {
-                        window.SendKey(JumpKey, true);
-                        window.SendKey(LeftKey, true);
-                        window.SendKey(PunchKey, false);
-                        Thread.Sleep(200);
-                        window.SendKey(JumpKey, false);
-                        window.SendKey(LeftKey, false);
-                        Thread.Sleep(1000);
-                        WorldTile tile = this.GetTileAhead();
-                        this.Break(x => wh.SetWindowText(x),
-                            x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
-                            CancellationToken.None); // 5990
-                    }
+                    this.rowEnd(netAvatar.Position.X, netAvatar.Position.Y);
                     break;
                 }
                 Int32 distance = PunchingDistance(netAvatar.Position.X, info.X, netAvatar.FacingLeft);
                 if(distance > Range)
                 {
                     log("Finished: no blocks in range");
-                    if (1250 < netAvatar.Position.X && netAvatar.Position.X < 1400)
-                    {
-                        window.SendKey(JumpKey, true);
-                        window.SendKey(LeftKey, true);
-                        window.SendKey(PunchKey, false);
-                        Thread.Sleep(10);
-                        window.SendKey(LeftKey, false);
-                        Thread.Sleep(190);
-                        window.SendKey(JumpKey, false);
-                        Thread.Sleep(1000);
-                        WorldTile tile = this.GetTileAhead();
-                        this.Break(x => wh.SetWindowText(x),
-                            x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
-                            CancellationToken.None); // 5990
-                    }
+                    this.rowEnd(netAvatar.Position.X, netAvatar.Position.Y);
                     break;
                 }
                 if (!condition(info.Tile))
@@ -111,6 +84,41 @@ namespace TheLeftExit.TeslaX
             Thread.Sleep(2000);
             Console.Clear();
             Console.WriteLine("Current position is: " + netAvatar.Position.X + " , " + netAvatar.Position.Y);
+        }
+        public void rowEnd(int x, int y)
+        {
+            var p = Process.GetProcessesByName("Growtopia").First(); //Defines the Growtopia process
+            IntPtr wh = p.MainWindowHandle;
+            if (1250 < x && x < 1400)
+            {
+                window.SendKey(JumpKey, true);
+                window.SendKey(LeftKey, true);
+                window.SendKey(PunchKey, false);
+                Thread.Sleep(10);
+                window.SendKey(LeftKey, false);
+                Thread.Sleep(190);
+                window.SendKey(JumpKey, false);
+                Thread.Sleep(1000);
+                WorldTile tile = this.GetTileAhead();
+                this.Break(x => wh.SetWindowText(x),
+                    x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
+                    CancellationToken.None); // 5990
+            }
+            if (23 < x && x < 160)
+            {
+                window.SendKey(JumpKey, true);
+                window.SendKey(RightKey, true);
+                window.SendKey(PunchKey, false);
+                Thread.Sleep(10);
+                window.SendKey(RightKey, false);
+                Thread.Sleep(190);
+                window.SendKey(JumpKey, false);
+                Thread.Sleep(1000);
+                WorldTile tile = this.GetTileAhead();
+                this.Break(x => wh.SetWindowText(x),
+                    x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
+                    CancellationToken.None); // 5990
+            }
         }
     }
 }
