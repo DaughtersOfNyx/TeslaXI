@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using TheLeftExit.Growtopia.ObjectModel;
 
-using TheLeftExit.Growtopia.Native;
 using static TheLeftExit.Growtopia.GameWindow;
 
 namespace TheLeftExit.TeslaX
@@ -35,9 +34,6 @@ namespace TheLeftExit.TeslaX
 
         public void Break(Action<String> log, Func<WorldTile, bool> condition, CancellationToken token)
         {
-            var p = Process.GetProcessesByName("Growtopia").First(); //Defines the Growtopia process
-            IntPtr wh = p.MainWindowHandle;
-
             NetAvatar netAvatar = game.App.GameLogicComponent.NetAvatar;
             WorldTileMap worldTileMap = game.App.GameLogicComponent.World.WorldTileMap;
 
@@ -49,15 +45,15 @@ namespace TheLeftExit.TeslaX
                 var info = BlockAhead(netAvatar, worldTileMap);
                 if (info.Tile.IsEmpty)
                 {
+                    //finished(netAvatar.Position.X, netAvatar.Position.Y);
                     log("Finished: no blocks in range");
-                    this.rowEnd(netAvatar.Position.X, netAvatar.Position.Y);
                     break;
                 }
                 Int32 distance = PunchingDistance(netAvatar.Position.X, info.X, netAvatar.FacingLeft);
                 if(distance > Range)
                 {
+                    //finished(netAvatar.Position.X, netAvatar.Position.Y);
                     log("Finished: no blocks in range");
-                    this.rowEnd(netAvatar.Position.X, netAvatar.Position.Y);
                     break;
                 }
                 if (!condition(info.Tile))
@@ -81,43 +77,25 @@ namespace TheLeftExit.TeslaX
         public void posit()
         {
             NetAvatar netAvatar = game.App.GameLogicComponent.NetAvatar;
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
+            int xpos = netAvatar.Position.X / 32;
+            int ypos = netAvatar.Position.Y / 32;
             Console.Clear();
-            Console.WriteLine("Current position is: " + netAvatar.Position.X + " , " + netAvatar.Position.Y);
+            Console.WriteLine("Current position is: " + netAvatar.Position.X + ", " + netAvatar.Position.Y);
+            Console.WriteLine("Current grid position is: " + xpos + ", " + ypos);
         }
-        public void rowEnd(int x, int y)
+
+        public void finished(int x, int y)
         {
             var p = Process.GetProcessesByName("Growtopia").First(); //Defines the Growtopia process
             IntPtr wh = p.MainWindowHandle;
-            if (1250 < x && x < 1400)
+            WorldCamera worldcamera = game.App.GameLogicComponent.WorldRenderer.WorldCamera;
+            NetAvatar netAvatar = game.App.GameLogicComponent.NetAvatar;
+            if (0 < x && x < 160)
             {
-                window.SendKey(JumpKey, true);
-                window.SendKey(LeftKey, true);
-                window.SendKey(PunchKey, false);
-                Thread.Sleep(10);
-                window.SendKey(LeftKey, false);
-                Thread.Sleep(190);
-                window.SendKey(JumpKey, false);
-                Thread.Sleep(1000);
-                WorldTile tile = this.GetTileAhead();
-                this.Break(x => wh.SetWindowText(x),
-                    x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
-                    CancellationToken.None); // 5990
             }
-            if (23 < x && x < 160)
+            if (3030 < x && x < 3180)
             {
-                window.SendKey(JumpKey, true);
-                window.SendKey(RightKey, true);
-                window.SendKey(PunchKey, false);
-                Thread.Sleep(10);
-                window.SendKey(RightKey, false);
-                Thread.Sleep(190);
-                window.SendKey(JumpKey, false);
-                Thread.Sleep(1000);
-                WorldTile tile = this.GetTileAhead();
-                this.Break(x => wh.SetWindowText(x),
-                    x => tile.Foreground != 0 && tile.Foreground == x.Foreground || tile.Background != 0 && tile.Background == x.Background,
-                    CancellationToken.None); // 5990
             }
         }
     }
